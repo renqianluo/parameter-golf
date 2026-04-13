@@ -1,0 +1,40 @@
+{
+  "authors": [
+    {
+      "name": "Renqian Luo",
+      "github_id": "renqianluo"
+    }
+  ],
+  "description": "Score-first TTT (1-epoch SGD) + Causal Backoff N-gram (order=82, alpha_center=1.0, full_c_fix) — 0.29882 BPB (3-seed mean)",
+  "val_bpb": 0.29881876,
+  "seed_results": {
+    "1337": 0.30070531,
+    "42": 0.29790586,
+    "314": 0.29784511
+  },
+  "eval_time_seconds": {
+    "1337": 477.956,
+    "42": 488.145,
+    "314": 484.860
+  },
+  "artifact_size_bytes": {
+    "1337": 15839505,
+    "42": 15836045,
+    "314": 15843941
+  },
+  "model_size_mb": 15.10,
+  "methods": [
+    "TTT (Test-Time Training): 1 epoch SGD, lr=0.005, score-before-update",
+    "Causal Backoff N-gram mixer: order=82, 4M hash buckets, entropy-adaptive blending",
+    "NGRAM_ALPHA_CENTER=1.0 (aggressive n-gram blending at low entropy positions)",
+    "full_c_fix: prevents n-gram predictions when full context has never been seen",
+    "GPTQ int6 quantization with damp=0.005, calibrated on validation data",
+    "MTP (Multi-Token Prediction) with 2 heads, loss weight 0.1",
+    "QK-Gain initialization at 4.0",
+    "EMA + SWA weight averaging",
+    "LZMA9 compression"
+  ],
+  "no_ngram_cache": false,
+  "legal_ttt": true,
+  "slot_enabled": false
+}
