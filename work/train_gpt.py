@@ -194,13 +194,13 @@ class Hyperparameters:
     warmdown_frac = float(os.environ.get("WARMDOWN_FRAC", 0.75))
     warmup_steps = int(os.environ.get("WARMUP_STEPS", 20))
     train_batch_tokens = int(os.environ.get("TRAIN_BATCH_TOKENS", 786432))
-    fused_ce_enabled = bool(int(os.environ.get("FUSED_CE_ENABLED", "0")))
+    fused_ce_enabled = bool(int(os.environ.get("FUSED_CE_ENABLED", "1")))
     train_seq_len = int(os.environ.get("TRAIN_SEQ_LEN", 2048))
     train_log_every = int(os.environ.get("TRAIN_LOG_EVERY", 500))
     max_wallclock_seconds = float(os.environ.get("MAX_WALLCLOCK_SECONDS", 6e2))
     val_batch_tokens = int(os.environ.get("VAL_BATCH_TOKENS", 524288))
     eval_seq_len = int(os.environ.get("EVAL_SEQ_LEN", 2048))
-    val_loss_every = int(os.environ.get("VAL_LOSS_EVERY", 4000))
+    val_loss_every = int(os.environ.get("VAL_LOSS_EVERY", 0))
     sliding_window_enabled = bool(int(os.environ.get("SLIDING_WINDOW_ENABLED", "0")))
     vocab_size = int(os.environ.get("VOCAB_SIZE", 8192))
     num_layers = int(os.environ.get("NUM_LAYERS", 11))
@@ -224,7 +224,7 @@ class Hyperparameters:
     enable_looping_at = float(os.environ.get("ENABLE_LOOPING_AT", 0.35))
     parallel_start_layer = int(os.environ.get("PARALLEL_START_LAYER", 8))
     parallel_final_lane = os.environ.get("PARALLEL_FINAL_LANE", "mean")
-    min_lr = float(os.environ.get("MIN_LR", 0.0))
+    min_lr = float(os.environ.get("MIN_LR", 0.10))
     embed_lr = float(os.environ.get("EMBED_LR", 0.6))
     tied_embed_lr = float(os.environ.get("TIED_EMBED_LR", 0.03))
     tied_embed_init_std = float(os.environ.get("TIED_EMBED_INIT_STD", 0.005))
@@ -247,13 +247,13 @@ class Hyperparameters:
     embed_wd = float(os.environ.get("EMBED_WD", 0.085))
     ema_decay = float(os.environ.get("EMA_DECAY", 0.9965))
     ttt_enabled = bool(int(os.environ.get("TTT_ENABLED", "1")))
-    ttt_lora_rank = int(os.environ.get("TTT_LORA_RANK", 96))
+    ttt_lora_rank = int(os.environ.get("TTT_LORA_RANK", 128))
     ttt_lora_lr = float(os.environ.get("TTT_LORA_LR", 0.0001))
     ttt_chunk_size = int(os.environ.get("TTT_CHUNK_SIZE", 48))
     ttt_eval_seq_len = int(os.environ.get("TTT_EVAL_SEQ_LEN", 2048))
     ttt_batch_size = int(os.environ.get("TTT_BATCH_SIZE", 64))
     ttt_grad_steps = int(os.environ.get("TTT_GRAD_STEPS", 1))
-    ttt_weight_decay = float(os.environ.get("TTT_WEIGHT_DECAY", 0.5))
+    ttt_weight_decay = float(os.environ.get("TTT_WEIGHT_DECAY", 2.0))
     ttt_beta1 = float(os.environ.get("TTT_BETA1", 0))
     ttt_beta2 = float(os.environ.get("TTT_BETA2", 0.999))
     ttt_k_lora = bool(int(os.environ.get("TTT_K_LORA", "1")))
@@ -264,10 +264,10 @@ class Hyperparameters:
     val_doc_fraction = float(os.environ.get("VAL_DOC_FRACTION", 1.0))
     compressor = os.environ.get("COMPRESSOR", "brotli")
     gptq_calibration_batches = int(os.environ.get("GPTQ_CALIBRATION_BATCHES", 16))
-    gptq_reserve_seconds = float(os.environ.get("GPTQ_RESERVE_SECONDS", 4.0))
-    phased_ttt_enabled = bool(int(os.environ.get("PHASED_TTT_ENABLED", "0")))
+    gptq_reserve_seconds = float(os.environ.get("GPTQ_RESERVE_SECONDS", 0.5))
+    phased_ttt_enabled = bool(int(os.environ.get("PHASED_TTT_ENABLED", "1")))
     phased_ttt_prefix_docs = int(os.environ.get("PHASED_TTT_PREFIX_DOCS", 2000))
-    phased_ttt_num_phases = int(os.environ.get("PHASED_TTT_NUM_PHASES", 1))
+    phased_ttt_num_phases = int(os.environ.get("PHASED_TTT_NUM_PHASES", 3))
     global_ttt_lr = float(os.environ.get("GLOBAL_TTT_LR", 0.001))
     global_ttt_momentum = float(os.environ.get("GLOBAL_TTT_MOMENTUM", 0.9))
     global_ttt_epochs = int(os.environ.get("GLOBAL_TTT_EPOCHS", 1))
@@ -278,10 +278,10 @@ class Hyperparameters:
     global_ttt_grad_clip = float(os.environ.get("GLOBAL_TTT_GRAD_CLIP", 1.0))
     global_ttt_respect_doc_boundaries = bool(int(os.environ.get("GLOBAL_TTT_RESPECT_DOC_BOUNDARIES", "1")))
     matrix_bits = int(os.environ.get("MATRIX_BITS", 6))
-    embed_bits = int(os.environ.get("EMBED_BITS", 8))
+    embed_bits = int(os.environ.get("EMBED_BITS", 7))
     matrix_clip_sigmas = float(os.environ.get("MATRIX_CLIP_SIGMAS", 12.85))
-    embed_clip_sigmas = float(os.environ.get("EMBED_CLIP_SIGMAS", 2e1))
-    mlp_clip_sigmas = float(os.environ.get("MLP_CLIP_SIGMAS", 10.0))
+    embed_clip_sigmas = float(os.environ.get("EMBED_CLIP_SIGMAS", 15.0))
+    mlp_clip_sigmas = float(os.environ.get("MLP_CLIP_SIGMAS", 12.0))
     attn_clip_sigmas = float(os.environ.get("ATTN_CLIP_SIGMAS", 13.0))
     distributed = "RANK" in os.environ and "WORLD_SIZE" in os.environ
     rank = int(os.environ.get("RANK", "0"))
@@ -815,7 +815,7 @@ class CausalSelfAttention(nn.Module):
         self.use_xsa = False
         # Ported from PR #1736 (dexhunter) / PR #1771 (bigbag): Gated Attention (arXiv:2505.06708)
         # per-head sigmoid gate on SDPA output applied BEFORE out_proj.
-        self.gated_attn = bool(int(os.environ.get("GATED_ATTN_ENABLED", "0")))
+        self.gated_attn = bool(int(os.environ.get("GATED_ATTN_ENABLED", "1")))
         if self.gated_attn:
             gate_std = float(os.environ.get("GATED_ATTN_INIT_STD", "0.005"))
             W = torch.empty(num_heads, dim, dtype=torch.float32)
@@ -1352,7 +1352,7 @@ class GPT(nn.Module):
 class BatchedLinearLoRA(nn.Module):
     # Novel: rank-scaled output (alpha/rank), like standard LoRA. Decouples
     # effective magnitude from rank so changing rank does not change LR scale.
-    _ALPHA = float(os.environ.get("TTT_LORA_ALPHA", "96"))
+    _ALPHA = float(os.environ.get("TTT_LORA_ALPHA", "144"))
 
     def __init__(self, bsz, in_features, out_features, rank):
         super().__init__()
@@ -1438,7 +1438,7 @@ _PE_COEFFS = [
     (3.285753657755655, -2.3681294933425376, 0.46449024233003106),
     (2.3465413258596377, -1.7097828382687081, 0.42323551169305323),
 ]
-_POLAR_EXPRESS = bool(int(os.environ.get("POLAR_EXPRESS_NS", "0")))
+_POLAR_EXPRESS = bool(int(os.environ.get("POLAR_EXPRESS_NS", "1")))
 
 
 @torch.compile
