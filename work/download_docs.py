@@ -5,7 +5,7 @@ from huggingface_hub import hf_hub_download
 
 REPO_ID = "willdepueoai/parameter-golf"
 FILENAME = "docs_selected.jsonl"
-SUBFOLDER = "datasets/fineweb_v10B"
+SUBFOLDER = "datasets"
 TARGET = Path("/workspace/pgolf/data/docs_selected.jsonl")
 HF_CACHE = "/workspace/.cache/huggingface"
 
