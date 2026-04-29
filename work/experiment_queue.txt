@@ -1,0 +1,37 @@
+# Experiment queue for RunPod (one per line: name|seeds|env_vars)
+# Format: <exp_name>|<comma_sep_seeds>|<env_var_overrides>
+# Run with: bash work/run_seeds.sh <name> <seeds> <env_vars>
+#
+# Baseline: 1.06957 (3-seed mean) — record/fused-ce-wd2-1.06957
+# Next experiments (prioritized by expected gain × low risk):
+
+# === Sanity check ===
+baseline_runpod|1337|
+
+# === PHASED_TTT_PREFIX_DOCS sweep (default 2000) ===
+prefix1500|1337|PHASED_TTT_PREFIX_DOCS=1500
+prefix2500|1337|PHASED_TTT_PREFIX_DOCS=2500
+prefix3000|1337|PHASED_TTT_PREFIX_DOCS=3000
+
+# === MIN_LR sweep (default 0.10) ===
+minlr05|1337|MIN_LR=0.05
+minlr15|1337|MIN_LR=0.15
+
+# === TTT_LORA_LR sweep (default 0.0001) ===
+loralr15e5|1337|TTT_LORA_LR=0.00015
+loralr075e4|1337|TTT_LORA_LR=0.000075
+loralr125e4|1337|TTT_LORA_LR=0.000125
+
+# === Rank/alpha sweep ===
+rank192_a144|1337|TTT_LORA_RANK=192 TTT_LORA_ALPHA=144
+rank128_a160|1337|TTT_LORA_ALPHA=160
+rank128_a180|1337|TTT_LORA_ALPHA=180
+rank96_a144|1337|TTT_LORA_RANK=96
+
+# === Phases / grad steps ===
+phases4|1337|PHASED_TTT_NUM_PHASES=4
+phases2|1337|PHASED_TTT_NUM_PHASES=2
+gradsteps2|1337|TTT_GRAD_STEPS=2 TTT_LORA_LR=0.00005
+
+# === Reduce WD, requires stability check ===
+wd15|1337|TTT_WEIGHT_DECAY=1.5
