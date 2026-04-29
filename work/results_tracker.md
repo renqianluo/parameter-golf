@@ -15,3 +15,6 @@ Baseline: **1.06957** (3-seed mean)
 | **prefix1500 mean** | — | **1.06934** | **−0.00023** vs old record 1.06957 | — | — | **RECORD** | 3-seed mean — submit to PR |
 | prefix2500 | 1337 | 1.06988 | -0.00036 | 599.6 | 409.2 | maybe | PHASED_TTT_PREFIX_DOCS=2500 — also helps but less than 1500 |
 | minlr05 | 1337 | 1.07059 | +0.00035 | 599.6 | 369.2 | discard | MIN_LR=0.05 — hurts |
+| p1000s1337 | 1337 | 1.06985 | -0.00039 (worse than p1500) | 599.6 | 396.9 | discard | prefix=1000 too short; U-shape with 1500 optimal |
+
+## Direction: prefix=1500 is now baked into work/train_gpt.py default. Next sweep new knobs on top of 1.06934.
