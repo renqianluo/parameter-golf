@@ -39,13 +39,17 @@ TARGET.parent.mkdir(parents=True, exist_ok=True)
 if TARGET.exists() or TARGET.is_symlink():
     TARGET.unlink()
 
-# Try hard link first (local disk supports it), fall back to symlink
+# Resolve to actual blob (hf_hub_download returns a symlink with a relative target)
+real = Path(local).resolve()
+print(f"Resolved blob: {real}", flush=True)
+
+# Try hard link first (local disk supports it), fall back to absolute symlink
 try:
-    os.link(local, TARGET)
+    os.link(str(real), str(TARGET))
     print(f"[{time.time()-t0:.1f}s] Hard-linked to {TARGET}", flush=True)
 except OSError as e:
     print(f"Hard link failed ({e}), creating symlink...", flush=True)
-    os.symlink(local, TARGET)
+    os.symlink(str(real), str(TARGET))
     print(f"[{time.time()-t0:.1f}s] Symlinked to {TARGET}", flush=True)
 
 import subprocess
