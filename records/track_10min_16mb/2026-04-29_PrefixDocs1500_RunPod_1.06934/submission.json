@@ -1,0 +1,64 @@
+{
+  "authors": [
+    {
+      "name": "Renqian Luo",
+      "github_id": "renqianluo"
+    }
+  ],
+  "description": "Phased TTT prefix shortened from 2000 to 1500 documents on top of the PR-1.06957 stack (Fused softcap CE + WD=2.0 + warm-start LoRA + GatedAttn + Polar Express NS). The shorter unscored-warmup prefix lets the LoRA-TTT loop apply updates to ~500 more documents (16166 vs 16000 per phase across the 3 phases), which improves all 3 seeds. 3-seed mean 1.06934 BPB.",
+  "val_bpb": 1.06933770,
+  "seed_results": {
+    "1337": 1.06971119,
+    "42": 1.06902789,
+    "314": 1.06927402
+  },
+  "eval_time_seconds": {
+    "1337": 409.7,
+    "42": 409.3,
+    "314": 367.7
+  },
+  "train_time_seconds": {
+    "1337": 599.6,
+    "42": 599.5,
+    "314": 599.6
+  },
+  "artifact_size_bytes": {
+    "1337": 15975596,
+    "42": 15978587,
+    "314": 15971896
+  },
+  "methods": [
+    "Novel (this submission): PHASED_TTT_PREFIX_DOCS reduced 2000 -> 1500. Phased TTT splits 50K val docs into prefix (no LoRA updates, only base model) + suffix (3 phases with LoRA updates + global SGD between phases). Shrinking prefix lets the suffix span 48500 docs instead of 48000, so each of the 3 phases gets ~166 more TTT-updated docs. Improves all 3 seeds by 0.00015 to 0.00039 BPB. All 50K docs are still scored.",
+    "Fused softcap CE Triton kernel + TTT_WEIGHT_DECAY=2.0 (PR-1.06957): single streaming kernel computes softcap*tanh + log-sum-exp + per-row CE in fp32, with a backward kernel mirroring the forward symbolically. WD=2.0 stabilizes the kernel's interaction with warm-start LoRA A on seeds 314/1337.",
+    "Polar Express NS coefficients (ported from PR #1344): 5 per-iteration minimax-optimal Newton-Schulz tuples replace Muon's single fixed (3.4445,-4.775,2.0315) tuple.",
+    "MIN_LR=0.10 + GPTQ_RESERVE_SECONDS=0.5 + VAL_LOSS_EVERY=0 (PR #1787): LR floor + reclaim 15s of training budget.",
+    "PR #1768 (this author): per-head GatedAttn + gate mirror in LoRA-TTT path + per-row int8 gate quant.",
+    "PR #1767 (this author): alpha/rank LoRA scaling, warm-start LoRA A, alpha=144 on rank 128.",
+    "Base: dexhunter PR #1626 (Multi-Phase Global SGD + trimmed GPTQ + MATRIX_LR=0.026), samacqua PR #1530 (VarLen + Fused MLP + doc LoRA TTT), bigbag PR #1493 (triple recurrence + parallel residuals)."
+  ],
+  "attribution": {
+    "phased_ttt_prefix_docs_1500": "Renqian Luo (this submission)",
+    "fused_softcap_ce_kernel_and_wd2": "Renqian Luo (PR-1.06957) + @nprime06 (PR #1787 fused CE port)",
+    "polar_express_ns_coefficients": "PR #1344",
+    "min_lr_floor__tight_gptq_reserve__disabled_val": "@nprime06 (PR #1787)",
+    "gate_mirror_ttt_path__per_row_int8_gate_quant": "Renqian Luo (PR #1768)",
+    "alpha_scaled_lora__warm_start_A__alpha_144": "Renqian Luo (PR #1767)",
+    "gated_attention": "@dexhunter (PR #1736)",
+    "varlen_attention_fused_mlp_doc_ttt": "@samacqua (PR #1530)",
+    "phased_ttt_framework": "@romeerp (PR #1610), @dexhunter",
+    "triple_recurrence_parallel_residuals": "@bigbag (PR #1493), @EthanYangTW (PR #1523)",
+    "legal_ttt_framework": "@abaybektursun (PR #549)"
+  },
+  "legal_ttt": true,
+  "compliance": {
+    "train_under_600s": true,
+    "eval_under_600s": true,
+    "artifact_under_16mb": true,
+    "no_slot": true,
+    "no_pre_quant_ttt": true,
+    "no_ngram_cache": true,
+    "score_first_ttt": true,
+    "three_seeds": true
+  },
+  "hardware_note": "Trained on RunPod 8xH100 80GB SXM, PyTorch 2.9.1+cu128, FA3, Triton 3.5.1. Identical SP8192 tokenizer and FineWeb docs as upstream HF willdepueoai/parameter-golf."
+}
