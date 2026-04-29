@@ -35,3 +35,20 @@ gradsteps2|1337|TTT_GRAD_STEPS=2 TTT_LORA_LR=0.00005
 
 # === Reduce WD, requires stability check ===
 wd15|1337|TTT_WEIGHT_DECAY=1.5
+wd25|1337|TTT_WEIGHT_DECAY=2.5
+wd10_loralr07e4|1337|TTT_WEIGHT_DECAY=1.0 TTT_LORA_LR=0.00007
+
+# === No-prefix control ===
+prefix0|1337|PHASED_TTT_PREFIX_DOCS=0
+
+# === Beta sweep ===
+beta2_0995|1337|TTT_BETA2=0.995
+beta1_05|1337|TTT_BETA1=0.5
+beta1_09|1337|TTT_BETA1=0.9
+
+# === Optimizer ===
+ttt_adamw|1337|TTT_OPTIMIZER=adamw
+ttt_sgd|1337|TTT_OPTIMIZER=sgd
+
+# === Promising combos (run after sweep results inform direction) ===
+# Will be filled in based on single-knob sweep outcomes
